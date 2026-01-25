@@ -1,7 +1,3 @@
-Perfect — I’ll give you a **clean, professional, interview-ready README** that you can directly drop into GitHub.
-This is written to sound **serious, thoughtful, and well-engineered**, not like a toy app.
-
----
 
 # 💸 Smart Personal Finance & Expense Management App
 
