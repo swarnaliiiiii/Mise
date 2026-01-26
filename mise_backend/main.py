@@ -2,9 +2,9 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
 from db import Base, engine, SessionLocal
-from schemas import ExpenseCreate, AffordRequest
-from mise_backend.services.expenses_services import add_expense, monthly_spend
-from mise_backend.services.affordibility import when_can_i_afford
+from schemas.expense_schemas import ExpenseCreate, AffordRequest
+from services.expenses_services import add_expense, monthly_spend
+from services.affordibility import when_can_i_afford
 
 Base.metadata.create_all(bind=engine)
 

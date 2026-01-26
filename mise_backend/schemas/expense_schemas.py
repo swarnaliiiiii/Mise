@@ -1,10 +1,10 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date  as dt_date
 
 class ExpenseCreate(BaseModel):
     amount: float
     category: str
-    date: date | None = None
+    date: dt_date | None = None
     is_shared: int = 0
 
 class AffordRequest(BaseModel):

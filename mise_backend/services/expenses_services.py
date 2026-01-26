@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Expense
+from models.models import Expense
 from datetime import date
 
 def add_expense(db: Session, expense):
