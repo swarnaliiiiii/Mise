@@ -12,3 +12,4 @@ class AffordRequest(BaseModel):
     monthly_income: float
     fixed_expenses: float
     current_savings: float
+
