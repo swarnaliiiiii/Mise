@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import date  as dt_date
+from typing import List
 
 class ExpenseCreate(BaseModel):
     amount: float
@@ -13,3 +14,13 @@ class AffordRequest(BaseModel):
     fixed_expenses: float
     current_savings: float
 
+class GroupCreate(BaseModel):
+    name: str
+
+class SharedExpenseCreate(BaseModel):
+    group_id: int
+    paid_by: str
+    amount: float
+    participants: List[str]
+    description: str | None = None
+    date: dt_date | None = None
