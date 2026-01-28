@@ -31,11 +31,26 @@ class HomeController extends GetxController {
 
   void applyFilter(String filter) {
     selectedFilter.value = filter;
+    
     if (filter == "All") {
       filteredExpenses.assignAll(allExpenses);
-    } else if (filter == "Cash") {
-      // Filtering logic based on your category or a specific flag
-      filteredExpenses.assignAll(allExpenses.where((e) => e.category == "Cash Withdrawal").toList());
+    } 
+    else if (filter == "Cash") {
+      // Filter for transactions manually entered (e.g., Food, Cash Withdrawal, etc.)
+      // and exclude those that would be considered "Online"
+      filteredExpenses.assignAll(
+        allExpenses.where((e) => 
+          e.category == "Cash Withdrawal" || 
+          e.category == "Food" || 
+          e.category == "Other"
+        ).toList()
+      );
+    } 
+    else if (filter == "Online") {
+      // Assuming 'Online' transactions have a specific category or flag
+      filteredExpenses.assignAll(
+        allExpenses.where((e) => e.category == "Airtime/Data").toList()
+      );
     }
   }
 }
