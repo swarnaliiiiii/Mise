@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import Group, SharedExpense
+from models.models import Group, SharedExpense
 from datetime import date
 from collections import defaultdict
 
