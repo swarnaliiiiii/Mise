@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:mise_frontend/app/add_expense_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -71,7 +73,7 @@ class _HomeViewState extends State<HomeView> {
               style: TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.bold),
             ),
             ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () => Get.to(() => AddExpenseView()), // Navigation trigger
               icon: const Icon(Icons.add, size: 18),
               label: const Text("New expense"),
               style: ElevatedButton.styleFrom(
