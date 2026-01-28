@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 
 from db import Base, engine, SessionLocal
+from models.models import Expense
 from schemas.expense_schemas import ExpenseCreate, AffordRequest, GroupCreate, SharedExpenseCreate
 from services.expenses_services import add_expense, monthly_spend
 from services.affordibility import when_can_i_afford
@@ -62,3 +63,6 @@ def add_shared_expense_api(expense: SharedExpenseCreate, db: Session = Depends(g
 def get_group_balances(group_id: int, db: Session = Depends(get_db)):
     return calculate_balances(db, group_id)
 
+@app.get("/retrieve")
+def get_expenses(db: Session = Depends(get_db)):
+    return db.query(Expense).all() 

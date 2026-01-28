@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:mise_frontend/app/add_expense_view.dart';
+import 'package:mise_frontend/app/controller/expenses/list_controller.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -12,6 +13,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   int _selectedIndex = 0;
+  final homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -90,48 +92,71 @@ class _HomeViewState extends State<HomeView> {
 
   // 3. Transaction Tabs (Cash, All, Online from your sketch)
   Widget _buildTransactionFilters() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        _filterChip("Cash"),
-        _filterChip("All", isActive: true),
-        _filterChip("Online"),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      _filterChip("Cash"),
+      _filterChip("All"),
+      _filterChip("Online"),
       ],
     );
   }
 
-  Widget _filterChip(String label, {bool isActive = false}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      decoration: BoxDecoration(
-        color: isActive ? Colors.white12 : Colors.transparent,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: isActive ? Colors.white24 : Colors.transparent),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(color: isActive ? Colors.white : Colors.grey),
+  Widget _filterChip(String label) {
+  return Obx(() {
+    bool isActive = homeController.selectedFilter.value == label;
+    return GestureDetector(
+      onTap: () => homeController.applyFilter(label),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.white12 : Colors.transparent,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: isActive ? Colors.white24 : Colors.transparent),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(color: isActive ? Colors.white : Colors.grey, fontSize: 14.sp),
+        ),
       ),
     );
-  }
+  });
+}
 
   // 4. List of Transactions
   Widget _buildTransactionList() {
-    return ListView(
-      children: const [
-        Text("Recent expenses", style: TextStyle(color: Colors.grey, fontSize: 14)),
-        SizedBox(height: 15),
-        // Placeholder items
-        ListTile(
+  return Obx(() {
+    if (homeController.isLoading.value) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    return ListView.builder(
+      itemCount: homeController.filteredExpenses.length,
+      itemBuilder: (context, index) {
+        final expense = homeController.filteredExpenses[index];
+        return ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: CircleAvatar(backgroundColor: Colors.white10, child: Icon(Icons.fastfood, color: Colors.green)),
-          title: Text("Food", style: TextStyle(color: Colors.white)),
-          subtitle: Text("10 Oct, 2023", style: TextStyle(color: Colors.grey)),
-          trailing: Text("₦ 75,567.01", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        ),
-      ],
+          leading: CircleAvatar(
+            backgroundColor: Colors.white10,
+            child: Icon(_getIcon(expense.category), color: Colors.green, size: 20.r),
+          ),
+          title: Text(expense.category, style: TextStyle(color: Colors.white, fontSize: 16.sp)),
+          subtitle: Text(expense.date, style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+          trailing: Text(
+            "₦ ${expense.amount.toStringAsFixed(2)}",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.sp),
+          ),
+        );
+      },
     );
+  });
+}
+  IconData _getIcon(String category) {
+  switch (category) {
+    case "Food": return Icons.fastfood;
+    case "Cash Withdrawal": return Icons.money;
+    default: return Icons.category;
   }
+}
 
   // 5. Bottom Navigation Bar (Matching your sketch)
   Widget _buildBottomNav() {
