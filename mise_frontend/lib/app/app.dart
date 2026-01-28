@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mise_frontend/app/home_view.dart';
 import 'package:get/get.dart';
+import 'add_expense_view.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -25,10 +26,13 @@ class MyApp extends StatelessWidget {
               brightness: Brightness.dark,
             ),
           ),
-          home: child,
+          initialRoute: '/',
+          getPages: [
+            GetPage(name: '/', page: () => const HomeView()),
+            GetPage(name: '/AddExpenseView', page: () => AddExpenseView()),
+          ],
         );
-      },
-      child: const HomeView(),
+      }, // child: const HomeView(),
     );
   }
 }

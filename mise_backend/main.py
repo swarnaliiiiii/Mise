@@ -10,11 +10,21 @@ from services.shared_services import (
     add_shared_expense,
     calculate_balances
 )
+from fastapi.middleware.cors import CORSMiddleware
+
 
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Smart Finance App")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_db():
     db = SessionLocal()

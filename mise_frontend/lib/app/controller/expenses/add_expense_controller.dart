@@ -60,7 +60,7 @@ class AddExpenseController extends GetxController {
     try {
       final dioClient = dio.Dio();
       // Use 10.0.2.2 for Android Emulator or your local IP for physical devices
-      const String url = "http://10.0.2.2:8000/expense";
+      const String url = "http://localhost:8000/expense";
 
       final response = await dioClient.post(url, data: {
         "amount": double.parse(amountText),
