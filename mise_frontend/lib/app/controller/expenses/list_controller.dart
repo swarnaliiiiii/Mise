@@ -18,7 +18,7 @@ class HomeController extends GetxController {
     try {
       isLoading(true);
       // In your main.py, you can add a GET /expenses endpoint if not already there
-      final response = await Dio().get("http://localhost:8000/retrieve"); 
+      final response = await Dio().get("http://192.168.29.190:8000/retrieve"); 
       if (response.statusCode == 200) {
         var list = (response.data as List).map((e) => Expense.fromJson(e)).toList();
         allExpenses.assignAll(list);
