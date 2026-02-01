@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AddExpenseController extends GetxController {
   // 1. Observable variables for the UI
@@ -17,6 +18,8 @@ class AddExpenseController extends GetxController {
     {"name": "Cash Withdrawal", "icon": Icons.money},
     {"name": "Other", "icon": Icons.more_horiz},
   ];
+
+  final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
   // 2. Methods for UI Interaction
   void setCategory(String category) => selectedCategory.value = category;
@@ -44,7 +47,8 @@ class AddExpenseController extends GetxController {
     if (picked != null) {
       selectedDate.value = picked;
       // Formatting for display: e.g., 10 Oct, 2023
-      selectedDateString.value = "${picked.day} ${_getMonth(picked.month)}, ${picked.year}";
+      selectedDateString.value =
+          "${picked.day} ${_getMonth(picked.month)}, ${picked.year}";
     }
   }
 
@@ -52,7 +56,9 @@ class AddExpenseController extends GetxController {
   Future<void> saveExpense(String amountText) async {
     if (amountText.isEmpty) {
       Get.snackbar("Error", "Please enter an amount",
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
       return;
     }
 
@@ -60,30 +66,49 @@ class AddExpenseController extends GetxController {
     try {
       final dioClient = dio.Dio();
       // Use 10.0.2.2 for Android Emulator or your local IP for physical devices
-      const String url = "http://192.168.29.190:8000/expense";
+      String url = "$baseUrl/expense";
 
       final response = await dioClient.post(url, data: {
         "amount": double.parse(amountText),
         "category": selectedCategory.value,
-        "date": selectedDate.value.toIso8601String().split('T')[0], // Backend expects YYYY-MM-DD
+        "date": selectedDate.value
+            .toIso8601String()
+            .split('T')[0], // Backend expects YYYY-MM-DD
         "is_shared": isShared.value,
       });
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         Get.back(); // Close the page
         Get.snackbar("Success", "Expense added to database!",
-            snackPosition: SnackPosition.BOTTOM, backgroundColor: const Color(0xFFB4F59E), colorText: Colors.black);
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: const Color(0xFFB4F59E),
+            colorText: Colors.black);
       }
     } catch (e) {
       Get.snackbar("Error", "Check backend connection: $e",
-          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     } finally {
       isLoading.value = false;
     }
   }
 
   String _getMonth(int month) {
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
     return months[month - 1];
   }
 }

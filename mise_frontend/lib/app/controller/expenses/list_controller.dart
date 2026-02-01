@@ -1,12 +1,15 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:mise_frontend/app/models/expense_models.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomeController extends GetxController {
   var allExpenses = <Expense>[].obs;
   var filteredExpenses = <Expense>[].obs;
   var isLoading = true.obs;
   var selectedFilter = "All".obs;
+
+  final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
   @override
   void onInit() {
@@ -18,7 +21,7 @@ class HomeController extends GetxController {
     try {
       isLoading(true);
       // In your main.py, you can add a GET /expenses endpoint if not already there
-      final response = await Dio().get("http://192.168.29.190:8000/retrieve"); 
+      final response = await Dio().get("$baseUrl/retrieve"); 
       if (response.statusCode == 200) {
         var list = (response.data as List).map((e) => Expense.fromJson(e)).toList();
         allExpenses.assignAll(list);
