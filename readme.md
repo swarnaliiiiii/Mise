@@ -1,237 +1,109 @@
+# 💸 Mise
 
-# 💸 Smart Personal Finance & Expense Management App
+### **Money Is Easy.**
 
-> **Track less. Decide better.**
+> **Mise [meez]:** Derived from *Mise en place*. Everything in its place. Everyone in control.
 
-A smart personal finance application that helps users **track expenses, manage shared costs, analyze spending behavior using AI, and predict future affordability** for planned purchases — all in one place.
-
----
-
-## 🚀 Overview
-
-Most personal finance apps focus on *what you already spent*.
-This app goes a step further — it helps users **understand why they spend**, **how to improve**, and **when they can safely afford future purchases**.
-
-It combines:
-
-* Expense tracking
-* Shared expense management
-* Smart data ingestion (bill scanning, online transactions)
-* AI-powered spending analysis
-* Predictive affordability simulation
+**Mise** is a smart personal finance ecosystem designed to bridge the gap between "How much did I spend?" and "What can I afford?" By combining **OCR data ingestion**, **shared ledger logic**, and a **predictive AI engine**, Mise transforms the chore of budgeting into a streamlined, automated experience.
 
 ---
 
-## 🎯 Key Features
+## 🎯 The Mise Philosophy
 
-### 1. Expense Management
+Most finance apps are reactive—they report the past. **Mise** is proactive. It is built on three pillars:
 
-* Track daily, weekly, and monthly expenses
-* Supports:
-
-  * Cash
-  * Online payments
-* Category-wise tracking
-* Manual and automated entry options
+1. **Effortless Ingestion:** If it’s hard to track, you won’t do it. We automate entry via vision and text parsing.
+2. **Behavioral Clarity:** Understanding *why* you overspend is more important than knowing *where*.
+3. **Future Modeling:** Deciding to buy a new laptop shouldn't be a "gut feeling." It should be a data-backed "Yes."
 
 ---
 
-### 2. Shared / Room Expense Management
+## 🚀 Key Features
 
-* Create shared groups (roommates, trips, couples)
-* Split expenses:
+### 1. The Decision Engine ("When Can I Afford This?")
 
-  * Equally
-  * Custom ratios
-* Track balances:
+The standout feature of Mise. Input a goal (e.g., "iPhone 16," "Trip to Japan"), and the AI calculates:
 
-  * Who owes whom
-  * Monthly settlement summaries
+* **The Safe Date:** When you can buy it without hitting your emergency fund.
+* **The "Burn" Impact:** How the purchase changes your daily spending limit for the following 3 months.
+* **Lifestyle Scenarios:** Adjusts the timeline based on "Frugal" vs. "Current" spending habits.
 
----
+### 2. Smart Ingestion Layer
 
-### 3. Smart Expense Input
+* **Snap-to-Track:** Scan any physical receipt. Our OCR extracts the merchant, total, tax, and category.
+* **Digital Pulse:** Pluggable adapters for SMS transaction parsing, CSV imports, and email receipt scanning.
+* **Zero-Entry Shared Mode:** Split bills with roommates or partners in one tap.
 
-#### 🧾 Bill & Receipt Scanning
+### 3. AI Intelligence Layer
 
-* Scan bills using camera
-* Automatically extracts:
-
-  * Amount
-  * Date
-  * Category
-* Adds directly to daily expenses
-
-#### 💳 Online Transaction Support
-
-* Supports:
-
-  * SMS-based transaction parsing
-  * Email receipt parsing
-  * CSV imports
-* Designed with a **pluggable transaction ingestion layer**
-  (to support future banking/UPI integrations)
+* **The "Leak" Detector:** Identifies "zombie" subscriptions and impulse spending spikes (e.g., "You spend 40% more on weekends when you visit Coffee Shops").
+* **Nitpicks & Nudges:** Instead of generic alerts, get actionable feedback: *"You’re $50 over your dining budget; skipping one takeout meal this week puts you back on track."*
 
 ---
 
-### 4. Spending Insights & Visualizations
+## 🏗️ System Architecture
 
-* Category-wise spending charts
-* Daily burn-rate analysis
-* Month-over-month comparisons
-* Personal vs shared expense breakdown
+Mise utilizes a modular architecture to ensure scalability and ease of integration for new banking APIs.
 
----
+```mermaid
+graph TD
+    A[User Input: Scan/SMS/Manual] --> B[Ingestion Layer]
+    B --> C{Processing Engine}
+    C --> D[Shared Ledger]
+    C --> E[Personal Expense Tracker]
+    D & E --> F[AI Intelligence Layer]
+    F --> G[Predictive Affordability Engine]
+    G --> H[User Dashboard: Insights & Alerts]
 
-## 🧠 AI-Powered Intelligence Layer
-
-### 5. AI Spending Analysis
-
-* Daily & weekly spending summaries
-* Detects:
-
-  * Overspending patterns
-  * Habit-based leaks
-  * Weekend / impulse spikes
-* Explains **why** budget overruns happened
-
-Example:
-
-> “62% of your overspending this week came from late-night food orders.”
-
----
-
-### 6. AI Budget Warnings & Nitpicks
-
-* Real-time alerts when spending goes off-track
-* Actionable suggestions:
-
-  * Reduce specific categories
-  * Pause subscriptions
-  * Adjust daily spend limits
-* Focuses on **behavioral finance**, not restriction
-
----
-
-## 🔮 Predictive Decision Engine
-
-### 7. “When Can I Afford This?” System
-
-A future affordability simulator that helps users plan purchases **without financial stress**.
-
-**User inputs:**
-
-* Item (phone, monitor, trip, etc.)
-* Price
-* Priority level
-
-**System outputs:**
-
-* Earliest safe purchase date
-* Cash-flow impact timeline
-* Risk indicators if bought early
-* Multiple scenarios:
-
-  * Normal lifestyle
-  * Light spending cuts
-  * Aggressive savings
-
-This transforms the app from a tracker into a **decision-making assistant**.
-
----
-
-### 8. AI-Guided Investment Awareness (Educational)
-
-* Provides **non-advisory**, educational investment insights
-* Based on:
-
-  * Income stability
-  * Spending consistency
-  * Emergency fund health
-* Suggests:
-
-  * When *not* to invest
-  * Beginner-friendly allocations
-  * Safe savings vs growth balance
-
----
-
-## 🏗️ System Architecture (High Level)
-
-```
-User Input Layer
-│
-├── Manual Expense Entry
-├── Bill Scanning (OCR)
-├── Transaction Parsing (SMS / Email / CSV)
-│
-Data Processing Layer
-│
-├── Expense Categorization
-├── Shared Expense Engine
-├── Budget & Cash Flow Engine
-│
-AI Intelligence Layer
-│
-├── Spending Pattern Detection
-├── Budget Overrun Explanation
-├── Affordability Simulation
-│
-Visualization & UX
-│
-├── Charts & Dashboards
-├── Alerts & Insights
-└── AI Chat Interface
 ```
 
 ---
 
-## 🧪 MVP Scope
+## 🛠️ Tech Stack
 
-The MVP focuses on:
-
-* Expense tracking
-* Shared expenses
-* Bill scanning
-* Spending charts
-* AI spending analysis
-* Single-item affordability prediction
-
-Advanced features are modular and can be added incrementally.
+* **Frontend:** `Flutter` (for a seamless iOS/Android experience).
+* **Backend:** `FastAPI` (Asynchronous Python for high-concurrency parsing).
+* **Database:** `MongoDB` (To handle unstructured transaction metadata).
+* **AI/ML:** `LangChain` + `OpenAI` for spending insights; `Scikit-learn` for trend forecasting.
+* **Vision:** `Google ML Kit` for on-device OCR.
 
 ---
 
-## 🛠️ Tech Stack (Suggested)
+## 📈 The "Mise" Logic
 
-* **Frontend:** Flutter
-* **Backend:** Python (FastAPI / Django)
-* **Database:** MongoDB
-* **AI Layer:** Rule-based logic + LLM (explainable prompts)
-* **OCR:** Tesseract / Google ML Kit
-* **Charts:** Chart.js 
+To calculate your financial health, Mise monitors your **Monthly Velocity** ():
+
+If  drops below your user-defined "Safety Threshold," Mise automatically triggers a **Budget Warning** and suggests adjustments to your predictive purchase timelines.
 
 ---
 
-## 🧠 Why This Project Stands Out
+## 🏁 Getting Started
 
-* Goes beyond expense tracking → **decision intelligence**
-* Strong focus on **behavioral finance**
-* Predictive, not reactive
-* Clean separation of data, logic, and AI layers
-* Interview-friendly system design
+1. **Clone the Repository:**
+```bash
+git clone https://github.com/yourusername/mise.git
+
+```
+
+
+2. **Environment Setup:** Create a `.env` file with your API keys for OCR and AI services.
+3. **Run with Docker:**
+```bash
+docker-compose up --build
+
+```
+
+
 
 ---
 
-## 📌 Future Enhancements
+## 🔮 Future Roadmap
 
-* Multi-goal financial planning
-* Subscription auto-detection
-* Portfolio-based investment simulation
-* Real-time bank integrations (where available)
-* Personalized financial health score
+* **Mise Card:** Virtual cards with real-time budget blocking.
+* **Investment Nudges:** Transitioning surplus "Velocity" into low-risk assets.
+* **Multi-Currency Support:** For the global traveler.
 
 ---
 
-## 🏁 Conclusion
+**Mise: Because money is finally easy.**
 
-This project demonstrates how **data + AI + thoughtful UX** can transform personal finance from passive tracking into **active decision-making**.
