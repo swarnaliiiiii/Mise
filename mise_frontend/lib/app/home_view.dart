@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:mise_frontend/app/add_expense_view.dart';
 import 'package:mise_frontend/app/controller/expenses/list_controller.dart';
 import 'package:mise_frontend/app/share_view.dart';
+import 'package:mise_frontend/app/controller/voice_command/voice_controller.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -15,31 +16,43 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   int _selectedIndex = 0;
   final homeController = Get.put(HomeController());
-  
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A), // Dark background from ref
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              SizedBox(height: 30.w),
-              _buildBalanceCard(),
-              SizedBox(height: 30.w),
-              _buildTransactionFilters(),
-              SizedBox(height: 20.w),
-              Expanded(child: _buildTransactionList()),
-            ],
-          ),
+  final voiceController = Get.put(VoiceController());
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFF0A0A0A),
+    body: SafeArea(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: Column(
+          children: [
+            _buildHeader(),
+            SizedBox(height: 30.w),
+            _buildBalanceCard(),
+            SizedBox(height: 30.w),
+            _buildTransactionFilters(),
+            SizedBox(height: 20.w),
+            Expanded(child: _buildTransactionList()),
+          ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNav(),
-    );
-  }
+    ),
+    // 1. ADD THE FLOATING ACTION BUTTON
+    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    floatingActionButton: Obx(() => FloatingActionButton(
+      backgroundColor: voiceController.isListening.value 
+          ? Colors.redAccent 
+          : const Color(0xFFB4F59E), // Mint green
+      onPressed: () => voiceController.toggleListening(), // Trigger mic
+      child: Icon(
+        voiceController.isListening.value ? Icons.stop : Icons.mic,
+        color: Colors.black,
+      ),
+    )),
+    bottomNavigationBar: _buildBottomNav(),
+  );
+}
 
   // 1. Header with Profile and Date
   Widget _buildHeader() {
@@ -183,38 +196,71 @@ class _HomeViewState extends State<HomeView> {
 
   // 5. Bottom Navigation Bar (Matching your sketch)
   Widget _buildBottomNav() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: const Color(0xFF0A0A0A),
-      selectedItemColor: const Color(0xFFB4F59E),
-      unselectedItemColor: Colors.grey,
-      currentIndex: _selectedIndex,
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            setState(() => _selectedIndex = 0); 
-            break;
-          case 1:
-            Get.to(() => AddExpenseView()); // Add button
-            break;
-          case 2:
-            setState(() => _selectedIndex = 2); // AI — placeholder for now
-            break;
-          case 3:
-            Get.to(() => SharedView()); // Shared button
-            break;
-          case 4:
-            setState(() => _selectedIndex = 4); // Loan — placeholder for now
-            break;
+    return BottomAppBar(
+      shape: const CircularNotchedRectangle(), // Creates the "cut-out" for the mic
+      notchMargin: 8.0,
+      color: const Color(0xFF0A0A0A), // Matches your background
+      child: SizedBox(
+        height: 60.h,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Left side: Home and Add
+            Row(
+              children: [
+                _navItem(Icons.home_outlined, "Home", 0),
+                _navItem(Icons.add_circle_outline, "Add", 1),
+              ],
+            ),
+            
+            // Central spacer for the Floating Mic Button
+            const Spacer(), 
+            
+            // Right side: Shared and Loan
+            Row(
+              children: [
+                _navItem(Icons.people_outline, "Shared", 3),
+                _navItem(Icons.account_balance_wallet_outlined, "Loan", 4),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+// Helper widget to handle item selection and styling
+  Widget _navItem(IconData icon, String label, int index) {
+    bool isSelected = _selectedIndex == index;
+    return GestureDetector(
+      onTap: () {
+        if (index == 1) {
+          Get.to(() => AddExpenseView()); // Navigation from original
+        } else if (index == 3) {
+          Get.to(() => SharedView()); // Navigation from original
+        } else {
+          setState(() => _selectedIndex = index);
         }
       },
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.add_circle_outline), label: "Add"),
-        BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: "AI"),
-        BottomNavigationBarItem(icon: Icon(Icons.people_outline), label: "Shared"),
-        BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_outlined), label: "Loan"),
-      ],
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? const Color(0xFFB4F59E) : Colors.grey, // Mint green if active
+            ),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? const Color(0xFFB4F59E) : Colors.grey,
+                fontSize: 12.sp,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

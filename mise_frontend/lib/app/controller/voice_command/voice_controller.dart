@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Added
 import 'package:mise_frontend/app/controller/expenses/list_controller.dart';
 import 'package:mise_frontend/app/controller/split_share/shared_controller.dart';
 
@@ -13,7 +14,7 @@ class VoiceController extends GetxController {
   var recognizedText = "Listening...".obs;
 
   // Use 10.0.2.2 for Android Emulator, or your PC IP for physical devices
-  final String backendUrl = "http://10.0.2.2:8000/voice-expense";
+  final String baseUrl = dotenv.env['BASE_URL'] ?? '';
 
   void toggleListening() async {
     if (isListening.value) {
@@ -44,21 +45,21 @@ class VoiceController extends GetxController {
 
   Future<void> _processVoiceCommand(String text) async {
     try {
-      // Show a small loading indicator
       Get.showOverlay(
         asyncFunction: () async {
-          final response = await _dio.post(backendUrl, data: {"text": text});
+          final response = await _dio.post('$baseUrl/voice-expense', data: {"text": text});
           
           if (response.statusCode == 200) {
             final type = response.data['type'];
             final data = response.data['data'];
 
             if (type == "personal") {
-              // Refresh the main expense list
-              Get.find<HomeController>().fetchExpenses(); 
+              // REFRESH: Tells the Home/List controller to fetch new data from DB
+              Get.find<HomeController>().fetchExpenses();
               _showSuccessSnackbar("Added ₦${data['amount']} to ${data['category']}");
-            } else {
-              // Refresh the shared/friends list
+            } 
+            else if (type == "split") {
+              // REFRESH: Tells the Shared controller to fetch updated debts
               Get.find<SharedController>().fetchSharedDebts();
               _showSuccessSnackbar("Split ₦${data['amount']} with ${data['name']}");
             }
@@ -67,10 +68,7 @@ class VoiceController extends GetxController {
         loadingWidget: const Center(child: CircularProgressIndicator(color: Color(0xFFB4F59E))),
       );
     } catch (e) {
-      Get.snackbar("Command Error", "Could not understand: '$text'. Use 'Add expense' or 'Split with'",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.redAccent,
-          colorText: Colors.white);
+      Get.snackbar("Command Error", "Could not understand voice command.");
     }
   }
 
