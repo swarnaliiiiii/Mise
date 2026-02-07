@@ -1,13 +1,13 @@
 import re
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-app = FastAPI()
+router = APIRouter()
 
 class VoiceRequest(BaseModel):
     text: str
 
-@app.post("/voice-expense")
+@router.post("/voice-expense")
 async def process_voice_expense(request: VoiceRequest):
     text = request.text.lower()
     
