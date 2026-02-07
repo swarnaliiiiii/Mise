@@ -12,6 +12,7 @@ from services.shared_services import (
     calculate_balances
 )
 from fastapi.middleware.cors import CORSMiddleware
+from routers import voice_routes as voice_router
 
 
 
@@ -66,3 +67,5 @@ def get_group_balances(group_id: int, db: Session = Depends(get_db)):
 @app.get("/retrieve")
 def get_expenses(db: Session = Depends(get_db)):
     return db.query(Expense).all() 
+
+app.include_router(voice_router.router)
