@@ -18,7 +18,6 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
-  // REFACTORED: Now used by VoiceController to refresh state
   Future<void> fetchExpenses() async {
     try {
       isLoading(true);
@@ -26,7 +25,7 @@ class HomeController extends GetxController {
       if (response.statusCode == 200) {
         var list = (response.data as List).map((e) => Expense.fromJson(e)).toList();
         allExpenses.assignAll(list);
-        applyFilter(selectedFilter.value); // Re-apply current filter after refresh
+        applyFilter(selectedFilter.value); // Re-apply current filter
       }
     } catch (e) {
       print("Home Fetch Error: $e");
@@ -40,6 +39,7 @@ class HomeController extends GetxController {
     if (filter == "All") {
       filteredExpenses.assignAll(allExpenses);
     } else if (filter == "Cash") {
+      // Matches typical voice command categories like "Food"
       filteredExpenses.assignAll(
         allExpenses.where((e) => 
           ["Cash Withdrawal", "Food", "Other"].contains(e.category)

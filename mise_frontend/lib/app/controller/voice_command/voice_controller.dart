@@ -44,34 +44,40 @@ class VoiceController extends GetxController {
   }
 
   Future<void> _processVoiceCommand(String text) async {
-    try {
-      Get.showOverlay(
-        asyncFunction: () async {
-          final response = await _dio.post('$baseUrl/voice-expense', data: {"text": text});
-          
-          if (response.statusCode == 200) {
-            final type = response.data['type'];
-            final data = response.data['data'];
+  try {
+    // 1. Show the loading overlay
+    Get.showOverlay(
+      asyncFunction: () async {
+        // 2. Make the request inside the asyncFunction
+        final response = await _dio.post(
+          '$baseUrl/voice-expense', 
+          data: {"text": text},
+        );
 
-            if (type == "personal") {
-              // REFRESH: Tells the Home/List controller to fetch new data from DB
-              Get.find<HomeController>().fetchExpenses();
-              _showSuccessSnackbar("Added ₦${data['amount']} to ${data['category']}");
-            } 
-            else if (type == "split") {
-              // REFRESH: Tells the Shared controller to fetch updated debts
-              Get.find<SharedController>().fetchSharedDebts();
-              _showSuccessSnackbar("Split ₦${data['amount']} with ${data['name']}");
-            }
+        // 3. Move your logic INSIDE here where 'response' exists
+        if (response.statusCode == 200) {
+          final String type = response.data['type'];
+          final Map data = response.data['data'];
+
+          if (type == "personal") {
+            Get.find<HomeController>().fetchExpenses();
+            _showSuccessSnackbar("Added \$${data['amount']} to ${data['category']}");
+          } else if (type == "split") {
+            Get.find<SharedController>().fetchSharedDebts();
+            _showSuccessSnackbar("Split \$${data['amount']} with ${data['name']}");
           }
-        },
-        loadingWidget: const Center(child: CircularProgressIndicator(color: Color(0xFFB4F59E))),
-      );
-    } catch (e) {
-      Get.snackbar("Command Error", "Could not understand voice command.");
-    }
+        }
+      },
+      loadingWidget: const Center(child: CircularProgressIndicator(color: Color(0xFFB4F59E))),
+    );
+  } on DioException catch (e) {
+    // 4. Extract the helpful error message from your FastAPI detail
+    String errorMessage = e.response?.data['detail'] ?? "Could not understand voice command.";
+    Get.snackbar("Command Error", errorMessage);
+  } catch (e) {
+    Get.snackbar("Error", "An unexpected error occurred.");
   }
-
+}
   void _showSuccessSnackbar(String message) {
     Get.snackbar("Success", message,
         snackPosition: SnackPosition.BOTTOM,

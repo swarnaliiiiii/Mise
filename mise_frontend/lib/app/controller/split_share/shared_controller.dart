@@ -22,7 +22,7 @@ class SharedController extends GetxController {
     try {
       isLoading(true);
       // Assuming you create a /shared-debts endpoint in your FastAPI
-      final response = await Dio().get("$baseUrl/shared-debts"); 
+      final response = await Dio().get("$baseUrl/shared-expenses"); 
       
       if (response.statusCode == 200) {
         var list = (response.data as List)
